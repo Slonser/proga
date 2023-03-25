@@ -1,5 +1,6 @@
 package org.lab5.commands;
 
+import org.lab5.PackageScanner;
 import org.lab5.ScriptExecutionManager;
 import org.lab5.annotations.CommandInfo;
 import org.lab5.collection.CollectionManager;
@@ -25,6 +26,7 @@ public class ExecuteCommand implements Command {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filename))) {
             String line;
             CommandManager commandManager = new CommandManager();
+            commandManager.registerCommands(PackageScanner.commands);
             while ((line = bufferedReader.readLine()) != null) {
                 List<String> commandTokens = CommandParser.parseCommand(line);
                 Command command = null;

@@ -1,2 +1,2 @@
-show
-insert
+insert 123
+execute_script sample_script
