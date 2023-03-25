@@ -6,7 +6,7 @@ buildscript {
     }
     dependencies {
         // some external dependencies to be loaded (with needed one)
-        classpath 'com.opencsv:opencsv:5.7.2'
+        classpath 'com.opencsv:opencsv:5.7.1'
     }
 }
 plugins {
@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'com.opencsv', name: 'opencsv', version: '5.7.2'
+    implementation group: 'com.opencsv', name: 'opencsv', version: '5.7.1'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
