@@ -119,7 +119,9 @@ public class PackageScanner {
         for (var config : configs) {
             for (var field : config.getDeclaredFields()) {
                 if (field.isAnnotationPresent(FromEnviroment.class)) {
-                    setStaticField(config, field.getName(), System.getenv(field.getAnnotation(FromEnviroment.class).key()));
+                    String key = field.getAnnotation(FromEnviroment.class).key();
+                    String value = System.getenv(key);
+                    setStaticField(config, field.getName(), value);
                 }
             }
         }

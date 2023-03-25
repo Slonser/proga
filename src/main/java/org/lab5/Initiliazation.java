@@ -12,6 +12,7 @@ import org.lab5.exceptions.CommandRegistrationException;
 import org.lab5.exceptions.EnviromentNotFound;
 import org.lab5.models.Flat;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.Collections;
@@ -27,7 +28,7 @@ public class Initiliazation {
     /**
      * The file path of the collection file to load.
      */
-    private final String collectionFilePath;
+    private String collectionFilePath;
     /**
      * The package containing the available commands.
      */
@@ -49,6 +50,8 @@ public class Initiliazation {
         packageScanner = new PackageScanner();
         packageScanner.scanPackage("org.lab5");
         packageScanner.setFromEnvironment(Collections.singleton(config.class));
+        this.collectionFilePath = config.collection_path;
+
     }
 
     /**
@@ -99,7 +102,7 @@ public class Initiliazation {
                     .build();
             return new HashSet<>(csvToBean.parse());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Ошибка при открытии коллекции");
         }
         return new HashSet<>();
     }
