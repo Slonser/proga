@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group 'org.example'
+group 'org.lab5opencsv-5.2.jar'
 version '1.0-SNAPSHOT'
 
 repositories {
@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.opencsv:opencsv:5.7.1'
+    implementation group: 'com.opencsv', name: 'opencsv', version: '5.7.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
