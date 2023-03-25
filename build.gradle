@@ -22,7 +22,7 @@ jar {
 
 task fatJar1(type: Jar) {
     manifest {
-        attributes 'Main-Class': 'server.main.Main'
+        attributes 'Main-Class': 'org.lab5.main.Main'
     }
     baseName = 'lab5'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
