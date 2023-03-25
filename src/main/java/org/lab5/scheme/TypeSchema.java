@@ -35,7 +35,12 @@ public class TypeSchema {
     public TypeSchema(List<FieldSchema> fields, Class classReference) {
         this.fields = fields;
         if (!classReference.isEnum()) {
-            Constructor<?> constructor = classReference.getDeclaredConstructors()[0];
+            Constructor<?> constructor = null;
+            try {
+                constructor = classReference.getConstructor();
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            }
             constructor.setAccessible(true);
             try {
                 this.instance = constructor.newInstance();
