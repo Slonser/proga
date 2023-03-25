@@ -38,6 +38,7 @@ public class ExecuteCommand implements Command {
                 }
                 command.execute(commandTokens, collectionManager);
             }
+            ScriptExecutionManager.removeExecutingScript(filename);
             return new CommandResult(CommandResult.Status.OK, "Выполнение скрипта завершено");
         } catch (IOException e) {
             return CommandResult.error("execute_script: Не получается прочитать файл");
