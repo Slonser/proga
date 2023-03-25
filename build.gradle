@@ -1,14 +1,3 @@
-buildscript {
-    repositories {
-        jcenter()
-        mavenCentral()
-        mavenLocal()
-    }
-    dependencies {
-        // some external dependencies to be loaded (with needed one)
-        classpath 'com.opencsv:opencsv:5.7.1'
-    }
-}
 plugins {
     id 'java'
 }
@@ -29,6 +18,16 @@ jar {
     manifest {
         attributes 'Main-Class': 'org.lab5.Main'
     }
+}
+
+task fatJar1(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'server.main.Main'
+    }
+    baseName = 'lab5'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
 
 
