@@ -1,6 +1,7 @@
 package org.lab5.IO;
 
 import org.lab5.annotations.Skip;
+import org.lab5.models.Model;
 import org.lab5.scheme.FieldSchema;
 import org.lab5.scheme.Schema;
 import org.lab5.scheme.TypeSchema;
@@ -12,10 +13,14 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import static org.lab5.Validator.validateField;
+
 /**
 
  * A utility class for handling input operations.
@@ -85,9 +90,7 @@ public class InputClass {
     static public Object AutoGenerate(Field field) {
         if (field.getName().equals("id"))
             return ++id;
-        if (field.getType().getName().equals("java.time.ZonedDateTime"))
-            return ZonedDateTime.now();
-        return null;
+        return LocalDateTime.now();
     }
     /**
      * Parses a single field of an object using reflection based on its FieldSchema representation
@@ -126,30 +129,26 @@ public class InputClass {
                 if (line.isBlank()) {
                     if (update)
                         break;
-                    fieldReference.set(result, null);
-                    if (field.notNull) {
-                        writer.write(("Данное поле не может быть пустым\n").getBytes(StandardCharsets.UTF_8));
-                        continue;
-                    }
+                    line = null;
+                }
+
+                String validation = validateField(field,line);
+                if(validation != null){
+                    writer.write((validation).getBytes(StandardCharsets.UTF_8));
+                    continue;
+                }
+                if(line == null){
+                    ((Model)result).setField(field.getName(),null);
                     break;
                 }
 
                 Object value = typeName.equals("java.lang.String") ? line : valueOf.invoke(null, line);
-                if(typeName.equals("java.lang.String") && (((String) value).contains(";") || ((String) value).contains("\""))){
+                if(value != null && typeName.equals("java.lang.String") && (((String) value).contains(";") || ((String) value).contains("\""))){
                     writer.write(("Вы использовали запрещенный символ\n").getBytes(StandardCharsets.UTF_8));
                     continue;
                 }
 
-                if (field.min != null && Float.parseFloat(value.toString()) <= field.min) {
-                    writer.write(("Введите значение большее чем " + field.min + "\n").getBytes(StandardCharsets.UTF_8));
-                    continue;
-                }
-
-                if (field.max != null && Float.parseFloat(value.toString()) > field.max) {
-                    writer.write(("Введите значение меньшее или равное чем " + field.max + "\n").getBytes(StandardCharsets.UTF_8));
-                    continue;
-                }
-
+                //((Model)result).setField(fieldReference.getName(),value);
                 fieldReference.set(result, value);
                 break;
             }

@@ -18,11 +18,9 @@ public class CoordinatesConverter extends AbstractBeanField<Coordinates, String>
      * @param value the input String value to convert
      * @return a new Coordinates object with the x and y values parsed from the input String,
      *         or null if the input String is null, has an incorrect format or cannot be parsed
-     * @throws CsvDataTypeMismatchException if the input String value cannot be converted to a Coordinates object
-     * @throws CsvConstraintViolationException if the input String value does not meet the expected constraints
      */
     @Override
-    protected Object convert(String value) throws CsvDataTypeMismatchException, CsvConstraintViolationException {
+    protected Object convert(String value) {
         if (value == null) {
             return null;
         }

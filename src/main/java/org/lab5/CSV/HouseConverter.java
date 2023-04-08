@@ -29,25 +29,29 @@ public class HouseConverter extends AbstractBeanField<House, String> {
         // Populate the fields of the house object using the OpenCSV annotations
         try {
             house.setName(Validator.validateAndParse(parts[0], String.class));
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             return null;
         }
         try {
             house.setYear(Validator.validateAndParse(parts[1], Long.class));
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             return null;
         }
         try {
             house.setNumberOfFlatsOnFloor(Validator.validateAndParse(parts[2], Integer.class));
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             return null;
         }
         try {
             house.setNumberOfFloors(Validator.validateAndParse(parts[3], Long.class));
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             return null;
         }
-
+        try {
+            house.setNumberOfLifts(Validator.validateAndParse(parts[4], Integer.class));
+        } catch (Exception e) {
+            return null;
+        }
         return house;
     }
 
@@ -63,7 +67,8 @@ public class HouseConverter extends AbstractBeanField<House, String> {
             String sb = house.getName() + ";" +
                     house.getYear() + ";" +
                     house.getNumberOfFloors() + ";" +
-                    house.getNumberOfFlatsOnFloor() + ";";
+                    house.getNumberOfFlatsOnFloor() + ";" +
+                    house.getNumberOfLifts() + ";";
             return sb;
         } else {
             throw new CsvDataTypeMismatchException("Value is not of type House");

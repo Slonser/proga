@@ -1,6 +1,15 @@
 package org.lab5;
 
+import com.opencsv.bean.CsvCustomBindByName;
+import org.lab5.scheme.FieldSchema;
+import org.lab5.scheme.Schema;
+import org.lab5.scheme.TypeSchema;
+
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.util.List;
 
 /**
  * Validator provides methods to validate and parse command-line arguments based on their expected types.
@@ -62,6 +71,37 @@ public class Validator {
         } else {
             throw new IllegalArgumentException("Unsupported type: " + expectedType);
         }
+    }
+
+    public static String validateField(FieldSchema field, Object arg) throws java.lang.NullPointerException{
+        if(field.getFieldReference().isAnnotationPresent(CsvCustomBindByName.class)) {
+            try {
+                return validateObject(arg.getClass().getName(),arg);
+            } catch (IllegalAccessException e) {
+                throw new NullPointerException();
+            }
+        }
+
+        if(arg == null && field.notNull)
+            return "Данное поле не может быть пустым\n";
+        if (field.min != null && Float.valueOf( arg.toString()) <= field.min)
+            return "Введите значение большее чем " + field.min + "\n";
+        if (field.max != null && Float.valueOf( arg.toString())> field.max)
+            return "Введите значение меньшее или равное чем " + field.max + "\n";
+        return null;
+    }
+
+    static public String validateObject(String className, Object obj) throws IllegalAccessException,java.lang.NullPointerException {
+        TypeSchema schema = Schema.get(className);
+        List<FieldSchema> fields = schema.getFields();
+
+        for (var field : fields) {
+                String res = validateField(field,field.getFieldReference().get(obj));
+                if(res != null)
+                    return res;
+        }
+
+        return null;
     }
 
 }

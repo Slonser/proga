@@ -6,7 +6,7 @@ import org.lab5.annotations.*;
 import java.io.Serializable;
 
 @DataModel
-public class House implements Cloneable, Serializable {
+public class House extends Model implements Cloneable, Serializable {
 
     @CsvBindByName(column = "name")
     @CustomName(name = "Название дома")
@@ -37,6 +37,16 @@ public class House implements Cloneable, Serializable {
     private int numberOfLifts; //Значение поля должно быть больше 0
 
     public House() {
+    }
+
+    @Override
+    protected void initializeSetterMap() {
+        registerSetter("name", (value) -> setName((String) value));
+        registerSetter("year", (value) -> setYear((Long) value));
+        registerSetter("numberOfFloors", (value) -> setNumberOfFloors((Long) value));
+        registerSetter("numberOfFlatsOnFloor", (value) -> setNumberOfFlatsOnFloor((Long) value));
+        registerSetter("numberOfLifts", (value) -> setNumberOfLifts((Integer) value));
+
     }
 
     public House(String name, Long year, Long numberOfFloors, int numberOfFlatsOnFloor, int numberOfLifts) {
@@ -82,5 +92,27 @@ public class House implements Cloneable, Serializable {
 
     public void setNumberOfFlatsOnFloor(int numberOfFlatsOnFloor) {
         this.numberOfFlatsOnFloor = numberOfFlatsOnFloor;
+    }
+
+    public void setNumberOfFlatsOnFloor(long numberOfFlatsOnFloor) {
+        this.numberOfFlatsOnFloor = numberOfFlatsOnFloor;
+    }
+
+    public void setNumberOfLifts(int numberOfLifts) {
+        this.numberOfLifts = numberOfLifts;
+    }
+
+    @Override
+    public String toString() {
+        return
+                 name +
+                "\nдом -> год:" + year +
+                "\nдом -> количество этажей:" + numberOfFloors +
+                "\nдом -> количество квартир на этаже:" + numberOfFlatsOnFloor +
+                "\nдом -> количество лифтов:" + numberOfLifts;
+    }
+
+    public int getNumberOfLifts() {
+        return numberOfLifts;
     }
 }

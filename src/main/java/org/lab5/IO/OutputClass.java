@@ -33,28 +33,10 @@ public class OutputClass {
      * @throws NoSuchFieldException        if the field is not found
      */
     static public <T> void printField(FieldSchema field, BufferedOutputStream writer, String description, T obj) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, InstantiationException, NoSuchFieldException {
-        Class<?> type = field.getType();
-        //field.setAccessible(true);
-        String typeName = type.getName();
-        Method valueOf = getDeclaredMethod(String.class, "valueOf", type);
-        Method toString = getDeclaredMethod(type, "toString");
+        field.fieldReference.setAccessible(true);
         String data;
         String prompt = description + field.getName() + ": ";
-        if (typeName.equals("java.lang.String"))
-            data = prompt + field.fieldReference.get(obj);
-        else if (type.isPrimitive() || null != valueOf) {
-            data = prompt + valueOf.invoke(null, field.fieldReference.get(obj));
-        } else if (toString != null) {
-            data = prompt + toString.invoke(field.fieldReference.get(obj));
-        } else if (field.getType().isEnum()) {
-            data = prompt + field.fieldReference.get(obj);
-        } else {
-            prompt += "\n";
-            writer.write(prompt.getBytes(StandardCharsets.UTF_8));
-            writer.flush();
-            printClass(field.fieldReference.get(obj), writer, description + "----");
-            return;
-        }
+        data = prompt + field.fieldReference.get(obj);
         writer.write((data + "\n").getBytes(StandardCharsets.UTF_8));
         writer.flush();
     }

@@ -2,6 +2,7 @@ package org.lab5;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.lab5.CSV.CsvParseExceptionHandler;
 import org.lab5.IO.InputClass;
 import org.lab5.collection.CollectionManager;
 import org.lab5.collection.FlatCollectionManager;
@@ -14,10 +15,16 @@ import org.lab5.models.Flat;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
+import java.nio.channels.FileLockInterruptionException;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.FileSystemException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.lab5.Validator.validateObject;
 
 /**
  * The Initialization class is responsible for initializing the collection of flats
@@ -68,6 +75,17 @@ public class Initiliazation {
             flats = new HashSet<>();
         } else {
             flats = loadCollectionFromFile(collectionFilePath);
+            try {
+                for(var flat:flats) {
+                    String check = validateObject(Flat.class.getName(), flat);
+                    if (check != null) {
+                        System.out.println("Коллекция содержит невалидные значения и не была загружена");
+                        flats = new HashSet<>();
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Произошла ошибка при проверке коллекции");
+            }
         }
         flats.removeIf(flat -> flat.getHouse() == null || flat.getCoordinates() == null);
         CollectionManager<Flat> flatCollection = new FlatCollectionManager(flats);
@@ -99,10 +117,18 @@ public class Initiliazation {
                     .withSeparator(';')
                     .withIgnoreLeadingWhiteSpace(true)
                     .withIgnoreEmptyLine(true)
+                    .withExceptionHandler(new CsvParseExceptionHandler())
                     .build();
+
             return new HashSet<>(csvToBean.parse());
-        } catch (Exception e) {
-            System.out.println("Ошибка при открытии коллекции");
+        } catch (FileNotFoundException e) {
+            System.out.println("Файл коллекции не существует");
+        } catch (AccessDeniedException e){
+            System.out.println("Ошибка доступа к файлу коллекции");
+        } catch (FileLockInterruptionException e){
+            System.out.println("Похоже файл используется другим приложением");
+        } catch (IOException e){
+            System.out.println("Похоже файл используется другим приложением");
         }
         return new HashSet<>();
     }

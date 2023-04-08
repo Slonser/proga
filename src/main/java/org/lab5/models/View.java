@@ -5,5 +5,6 @@ import java.io.Serializable;
 public enum View implements Cloneable, Serializable {
     STREET,
     YARD,
-    GOOD
+    GOOD;
+
 }

@@ -9,7 +9,7 @@ import org.lab5.annotations.Prompt;
 import java.io.Serializable;
 
 @DataModel
-public class Coordinates implements Cloneable, Serializable {
+public class Coordinates extends Model implements Cloneable, Serializable   {
     @CsvBindByName(column = "x")
     @Prompt(description = "Введите координату x: ")
     @NotNull()
@@ -20,7 +20,14 @@ public class Coordinates implements Cloneable, Serializable {
     @NotNull()
     private Float y;
 
+
     public Coordinates() {
+    }
+
+    @Override
+    protected void initializeSetterMap() {
+        registerSetter("x",(value) -> setX((Integer) value));
+        registerSetter("y",(value) -> setY((Float) value));
     }
 
     public Coordinates(int x, Float y) {
@@ -37,7 +44,7 @@ public class Coordinates implements Cloneable, Serializable {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(Integer x) {
         this.x = x;
     }
 
@@ -45,7 +52,12 @@ public class Coordinates implements Cloneable, Serializable {
         return y;
     }
 
-    public void setY(float y) {
+    public void setY(Float y) {
         this.y = y;
+    }
+
+    @Override
+    public String toString() {
+        return "координаты -> x: "+ x + "\nкоординты -> y: " + y;
     }
 }

@@ -42,7 +42,8 @@ public class FlatCollectionManager extends CollectionManager<Flat> {
 
     @Override
     public boolean clear() {
-        collection.clear();
+        if(!collection.isEmpty())
+            collection.clear();
         return true;
     }
 

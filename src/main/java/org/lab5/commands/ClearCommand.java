@@ -11,8 +11,7 @@ public class ClearCommand implements Command {
     @Override
     public CommandResult execute(List<String> args, CollectionManager collectionManager) {
         collectionManager.clear();
-        System.out.println("Collection cleared");
-        return null;
+        return CommandResult.success("Collection cleared");
     }
 
     @Override

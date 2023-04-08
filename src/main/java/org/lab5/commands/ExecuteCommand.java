@@ -32,13 +32,18 @@ public class ExecuteCommand implements Command {
                 Command command = null;
                 try {
                     command = commandManager.getCommand(commandTokens.get(0));
-                } catch (CommandNotFoundException e) {
+                } catch (Exception e) {
                     continue;
                 }
                 if (command == null) {
                     return CommandResult.error(String.format("execute_script: Неизвестная команда %s", commandTokens.get(0)));
                 }
-                command.execute(commandTokens, collectionManager);
+                 CommandResult res =  command.execute(commandTokens, collectionManager);
+                if (res.getStatus() == CommandResult.Status.OK)
+                    System.out.println(res.getMessage());
+                else
+                    System.out.println("Произошла ошибка: " + res.getMessage());
+
             }
             ScriptExecutionManager.removeExecutingScript(filename);
             return new CommandResult(CommandResult.Status.OK, "Выполнение скрипта завершено");
